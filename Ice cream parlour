@@ -1,0 +1,16 @@
+def icecreamParlor(m, cost):
+    seen = {}
+    for i, c in enumerate(cost):
+        complement = m - c
+        if complement in seen:
+            return [seen[complement] + 1, i + 1]  # 1-based indices
+        seen[c] = i
+
+if __name__ == "__main__":
+    t = int(input().strip())  # number of trips
+    for _ in range(t):
+        m = int(input().strip())           # total money pooled
+        n = int(input().strip())           # number of flavors
+        cost = list(map(int, input().strip().split()))
+        result = icecreamParlor(m, cost)
+        print(*result)
