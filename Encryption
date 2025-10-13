@@ -1,0 +1,22 @@
+import math
+
+def encryption(s):
+    s = s.replace(" ", "")
+    L = len(s)
+    rows = math.floor(math.sqrt(L))
+    cols = math.ceil(math.sqrt(L))
+    if rows * cols < L:
+        rows += 1
+
+    grid = [s[i:i+cols] for i in range(0, L, cols)]
+
+    encrypted = []
+    for c in range(cols):
+        word = ''.join(row[c] for row in grid if c < len(row))
+        encrypted.append(word)
+
+    return ' '.join(encrypted)
+
+if __name__ == '__main__':
+    s = input().strip()
+    print(encryption(s))
