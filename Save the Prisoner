@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int t;
+    cin >> t; // number of test cases
+    
+    while (t--) {
+        long long n, m, s;
+        cin >> n >> m >> s; // number of prisoners, candies, starting seat
+        
+        long long result = ((s + m - 2) % n) + 1;
+        cout << result << endl;
+    }
+    
+    return 0;
+}
