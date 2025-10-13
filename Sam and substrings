@@ -1,0 +1,17 @@
+def substrings(n: str) -> int:
+    mod = 10**9 + 7
+    total = 0
+    prev_sum = 0
+
+    for i, ch in enumerate(n):
+        num = int(ch)
+        curr_sum = (prev_sum * 10 + (i + 1) * num) % mod
+        total = (total + curr_sum) % mod
+        prev_sum = curr_sum
+
+    return total
+
+if __name__ == "__main__":
+    n = input().strip()
+    result = substrings(n)
+    print(result)
