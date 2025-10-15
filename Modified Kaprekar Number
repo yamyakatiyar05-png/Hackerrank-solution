@@ -1,0 +1,22 @@
+def kaprekarNumbers(p, q):
+    result = []
+
+    for num in range(p, q + 1):
+        sq = str(num ** 2)
+        d = len(str(num))
+        r = sq[-d:]  # last d digits
+        l = sq[:-d] if sq[:-d] else '0'  # remaining digits
+
+        if int(l) + int(r) == num:
+            result.append(str(num))
+
+    if result:
+        print(" ".join(result))
+    else:
+        print("INVALID RANGE")
+
+# Input handling
+if __name__ == "__main__":
+    p = int(input().strip())
+    q = int(input().strip())
+    kaprekarNumbers(p, q)
