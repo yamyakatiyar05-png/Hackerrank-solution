@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+using namespace std;
+
+int winningLotteryTicket(vector<string>& tickets) {
+    unordered_map<int, long long> maskCount;
+
+    // Convert each ticket to a bitmask
+    for (const string& ticket : tickets) {
+        int mask = 0;
+        for (char ch : ticket) {
+            mask |= 1 << (ch - '0');
+        }
+        maskCount[mask]++;
+    }
+
+    vector<int> masks;
+    for (const auto& entry : maskCount) {
+        masks.push_back(entry.first);
+    }
+
+    long long total = 0;
+    int fullMask = (1 << 10) - 1; // 1023
+
+    for (size_t i = 0; i < masks.size(); ++i) {
+        for (size_t j = i; j < masks.size(); ++j) {
+            if ((masks[i] | masks[j]) == fullMask) {
+                if (i == j) {
+                    long long count = maskCount[masks[i]];
+                    total += count * (count - 1) / 2;
+                } else {
+                    total += maskCount[masks[i]] * maskCount[masks[j]];
+                }
+            }
+        }
+    }
+
+    return total;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<string> tickets(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> tickets[i];
+    }
+
+    cout << winningLotteryTicket(tickets) << endl;
+    return 0;
+}
