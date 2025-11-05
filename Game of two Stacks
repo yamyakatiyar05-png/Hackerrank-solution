@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to find the maximum number of elements that can be removed
+int twoStacks(int maxSum, int n, int m, int *a, int *b) {
+    int sum = 0;
+    int count = 0;
+    int i = 0, j = 0;
+
+    // First, take as many as possible from stack a
+    while (i < n && sum + a[i] <= maxSum) {
+        sum += a[i];
+        i++;
+    }
+
+    count = i;
+
+    // Now, try taking from stack b, possibly removing some from a
+    while (j < m) {
+        sum += b[j];
+        j++;
+
+        // If sum exceeds maxSum, remove elements from a's side
+        while (sum > maxSum && i > 0) {
+            i--;
+            sum -= a[i];
+        }
+
+        // If valid, update count
+        if (sum <= maxSum && i + j > count) {
+            count = i + j;
+        }
+    }
+
+    return count;
+}
+
+int main() {
+    int g; // number of games
+    scanf("%d", &g);
+
+    while (g--) {
+        int n, m, maxSum;
+        scanf("%d %d %d", &n, &m, &maxSum);
+
+        int *a = (int *)malloc(n * sizeof(int));
+        int *b = (int *)malloc(m * sizeof(int));
+
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &a[i]);
+        }
+        for (int j = 0; j < m; j++) {
+            scanf("%d", &b[j]);
+        }
+
+        int result = twoStacks(maxSum, n, m, a, b);
+        printf("%d\n", result);
+
+        free(a);
+        free(b);
+    }
+
+    return 0;
+}
