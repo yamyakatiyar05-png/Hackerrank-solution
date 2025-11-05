@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAXK 101
+
+int main() {
+    int T;
+    scanf("%d", &T);
+
+    while (T--) {
+        int n, k;
+        scanf("%d %d", &n, &k);
+
+        int arr[n];
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &arr[i]);
+        }
+
+        long long count = 0;
+        long long prefix_sum = 0;
+
+        long long freq[MAXK];
+        memset(freq, 0, sizeof(freq));
+
+        freq[0] = 1;  // one empty prefix with remainder 0
+
+        for (int i = 0; i < n; i++) {
+            prefix_sum += arr[i];
+            int remainder = (int)(prefix_sum % k);
+            if (remainder < 0)
+                remainder += k;  // handle negatives if any
+
+            count += freq[remainder];
+            freq[remainder]++;
+        }
+
+        printf("%lld\n", count);
+    }
+
+    return 0;
+}
