@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int start;
+    int end;
+} Interval;
+
+int compare(const void *a, const void *b) {
+    Interval *ia = (Interval *)a;
+    Interval *ib = (Interval *)b;
+    if (ia->start == ib->start)
+        return ia->end - ib->end;
+    return ia->start - ib->start;
+}
+
+int gridlandMetro(int n, int m, int k, int tracks[][3]) {
+    // Allocate memory for rows
+    Interval **rows = (Interval **)calloc(n + 1, sizeof(Interval *));
+    int *rowSizes = (int *)calloc(n + 1, sizeof(int));
+
+    // Count how many intervals per row
+    for (int i = 0; i < k; i++) {
+        int r = tracks[i][0];
+        rowSizes[r]++;
+    }
+
+    // Allocate space for each row's intervals
+    for (int i = 1; i <= n; i++) {
+        if (rowSizes[i] > 0)
+            rows[i] = (Interval *)malloc(rowSizes[i] * sizeof(Interval));
+    }
+
+    // Fill intervals
+    int *rowIndex = (int *)calloc(n + 1, sizeof(int));
+    for (int i = 0; i < k; i++) {
+        int r = tracks[i][0];
+        int c1 = tracks[i][1];
+        int c2 = tracks[i][2];
+        rows[r][rowIndex[r]].start = c1;
+        rows[r][rowIndex[r]].end = c2;
+        rowIndex[r]++;
+    }
+
+    long long totalCells = (long long)n * m;
+    long long trackCells = 0;
+
+    // Merge intervals and count track cells
+    for (int i = 1; i <= n; i++) {
+        if (rowSizes[i] == 0) continue;
+
+        int size = rowSizes[i];
+        qsort(rows[i], size, sizeof(Interval), compare);
+
+        int start = rows[i][0].start;
+        int end = rows[i][0].end;
+
+        for (int j = 1; j < size; j++) {
+            if (rows[i][j].start > end + 1) {
+                trackCells += (end - start + 1);
+                start = rows[i][j].start;
+                end = rows[i][j].end;
+            } else {
+                if (rows[i][j].end > end)
+                    end = rows[i][j].end;
+            }
+        }
+        trackCells += (end - start + 1);
+    }
+
+    // Free memory
+    for (int i = 1; i <= n; i++) {
+        if (rows[i]) free(rows[i]);
+    }
+    free(rows);
+    free(rowSizes);
+    free(rowIndex);
+
+    return totalCells - trackCells;
+}
+
+int main() {
+    int n, m, k;
+    scanf("%d %d %d", &n, &m, &k);
+    int tracks[k][3];
+    for (int i = 0; i < k; i++) {
+        scanf("%d %d %d", &tracks[i][0], &tracks[i][1], &tracks[i][2]);
+    }
+
+    int result = gridlandMetro(n, m, k, tracks);
+    printf("%d\n", result);
+    return 0;
+}
