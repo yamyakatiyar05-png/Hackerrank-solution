@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <string.h>
+
+int anagram(char *s) {
+    int len = strlen(s);
+
+    // If length is odd, return -1
+    if (len % 2 != 0) {
+        return -1;
+    }
+
+    int freq[26] = {0};
+    int half = len / 2;
+
+    // Count frequency of characters in the first half
+    for (int i = 0; i < half; i++) {
+        freq[s[i] - 'a']++;
+    }
+
+    // Subtract frequency using the second half
+    for (int i = half; i < len; i++) {
+        freq[s[i] - 'a']--;
+    }
+
+    // Count positive differences (characters to change)
+    int changes = 0;
+    for (int i = 0; i < 26; i++) {
+        if (freq[i] > 0) {
+            changes += freq[i];
+        }
+    }
+
+    return changes;
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+    char s[10001];
+
+    while (t--) {
+        scanf("%s", s);
+        printf("%d\n", anagram(s));
+    }
+
+    return 0;
+}
